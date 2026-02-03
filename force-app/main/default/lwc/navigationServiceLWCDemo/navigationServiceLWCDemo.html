@@ -1,0 +1,15 @@
+<template>
+    <lightning-card title="Record Options" icon-name="standard:account">
+        <lightning-button-group>
+            <lightning-button label="View  " onclick={handleView}></lightning-button>
+            <lightning-button label="Create" onclick={handleCreate}></lightning-button>
+            <lightning-button label="Edit  " onclick={handleEdit}></lightning-button>
+        </lightning-button-group>
+    </lightning-card>
+    <lightning-card title="Navigation Options" icon-name="utility:filterList">
+        <lightning-button-group>
+            <lightning-button label="Recent Accounts  " onclick={handleRecentAccounts}></lightning-button>
+            <lightning-button label="Show Related Contacts" onclick={handleRelatedContacts}></lightning-button>
+        </lightning-button-group>
+    </lightning-card>
+</template>
