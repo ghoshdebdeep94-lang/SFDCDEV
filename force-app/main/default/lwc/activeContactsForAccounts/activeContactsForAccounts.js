@@ -1,4 +1,4 @@
-import { LightningElement, api } from 'lwc';
+  import { LightningElement, api } from 'lwc';
 import activeContacts from '@salesforce/apex/ContactManager.activeContacts';
 
 export default class ActiveContactsForAccounts extends LightningElement {
@@ -20,7 +20,7 @@ export default class ActiveContactsForAccounts extends LightningElement {
         })
         .catch(error=>{
             this.error = error;
-            console/log(error);
+            console.log(error);
         })
     }
 
