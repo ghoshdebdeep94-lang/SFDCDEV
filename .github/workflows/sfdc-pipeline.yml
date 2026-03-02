@@ -1,0 +1,59 @@
+name: Salesforce CI/CD Pipeline
+
+on:
+  push:
+    branches-ignore:
+      - main # Runs on all feature branches, but not on main
+  pull_request:
+    branches:
+      - main # Runs when you open a PR to merge into main
+  workflow_dispatch: # Your "Play Button"
+
+jobs:
+  # PHASE 1: AUTOMATIC CI (Uses Repository Secret)
+  validate-feature:
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install SF CLI
+        run: npm install @salesforce/cli --global
+      - name: Validate Against QA
+        run: |
+          # This will pull SFDX_QA_AUTH_URL from Repo Secrets
+          echo "${{ secrets.SFDX_QA_AUTH_URL }}" > auth.url
+          sf org login sfdx-url -f auth.url -a QA_Alias -d
+          sf project deploy validate --source-dir force-app --target-org QA_Alias --test-level RunLocalTests
+
+  # PHASE 2: MANUAL CD - DEPLOY TO QA (Play Button 1)
+  deploy-qa:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    environment: QA # GitHub looks for Secrets in this Environment first
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install SF CLI
+        run: npm install @salesforce/cli --global
+      - name: Deploy to QA
+        run: |
+          # This pulls SFDX_QA_AUTH_URL from the 'QA_Env' Environment Secrets
+          echo "${{ secrets.SFDX_QA_AUTH_URL }}" > auth.url
+          sf org login sfdx-url -f auth.url -a QA
+          sf project deploy start --source-dir force-app --target-org QA
+
+  # PHASE 3: MANUAL CD - DEPLOY TO PROD (Play Button 2)
+  deploy-prod:
+    needs: [deploy-qa] 
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    environment: Prod # GitHub looks for Secrets in this Environment first
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install SF CLI
+        run: npm install @salesforce/cli --global
+      - name: Deploy to Production
+        run: |
+          # This pulls SFDX_PROD_AUTH_URL from the 'Production_Env' Environment Secrets
+          echo "${{ secrets.SFDX_PROD_AUTH_URL }}" > auth.url
+          sf org login sfdx-url -f auth.url -a PROD
+          sf project deploy start --source-dir force-app --target-org PROD --test-level RunLocalTests
