@@ -6,4 +6,5 @@
     "**/.sfdx": true
   },
   "xml.preferences.showSchemaDocumentationType": "none"
+  "editor.formatOnSave": true
 }
