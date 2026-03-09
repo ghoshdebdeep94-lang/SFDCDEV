@@ -13,8 +13,10 @@
     <lightning-accordion allow-multiple-sections-open>
       <template for:each={contacts} for:item="contact">
         <lightning-accordion-section key={contact.Id} label={contact.Name}>
-          Name: {contact.Name} Last Name: {contact.LastName} Email:
-          {contact.Email}
+          <div class="slds-card slds-var-m-around_medium">
+            Name: {contact.Name} <br />
+            Email: {contact.Email}
+          </div>
         </lightning-accordion-section>
       </template>
     </lightning-accordion>
