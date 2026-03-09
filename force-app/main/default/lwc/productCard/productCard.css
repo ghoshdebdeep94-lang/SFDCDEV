@@ -1,0 +1,21 @@
+img.product{
+    width:100%;
+    margin-bottom:8px;
+}
+.row{
+    display:flex;
+    border-bottom:solid 1 px #f3f2f2;
+}
+row div:first-child{
+    width:80px;
+}
+section{
+    font-weight: bold;
+    font-size: 13 px;
+    margin-top: 8px;
+    text-transform: uppercase;
+}
+.price
+{
+    color:"#c23333";
+}

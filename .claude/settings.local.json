@@ -3,7 +3,13 @@
     "allow": [
       "Bash(npm run:*)",
       "Bash(npm install:*)",
-      "Bash(npx eslint:*)"
+      "Bash(npx eslint:*)",
+      "Bash(sf project deploy start --metadata StaticResource:bike_assets)",
+      "Bash(sfdx force:org:display)",
+      "Bash(sfdx force:data:tree:import --plan ./data/sample-data-plan.json)",
+      "Bash(sfdx force:data:soql:query -q \"SELECT IsoCode, Name FROM CountryCode LIMIT 5\")",
+      "Bash(sf data query -q \"SELECT IsoCode, Name FROM CountryCode LIMIT 5\")",
+      "Bash(cmd /c \"sfdx force:data:soql:query -q \"\"SELECT IsoCode, Name FROM CountryCode LIMIT 5\"\" 2>&1\")"
     ]
   }
 }

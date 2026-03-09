@@ -1,0 +1,35 @@
+<template>
+  <lightning-card>
+    <template if:true={product.data}>
+      <span slot="title">{product.data.fields.Name.Value}</span>
+      <div class="slds-m-horizontal_medium">
+        <img
+          src={product.data.fields.Picture_URL__c.value}
+          class="product"
+          alt="Product Picture"
+        />
+        <div class="row">
+          <div>Category</div>
+          <div>{product.data.fields.Category__c.value}</div>
+        </div>
+        <div class="row">
+          <div>Level</div>
+          <div>{product.data.fields.Level.value}</div>
+        </div>
+        <div class="row">
+          <div>MSRP</div>
+          <div>
+            <lightning-formatted-number
+              format-style="currency"
+              currency-code="USD"
+              value={product.data.fields.MSRP__c.value}
+            ></lightning-formatted-number>
+          </div>
+        </div>
+      </div>
+    </template>
+    <template if:true={noData}>
+      <c-placeholder message="Select a product to see details"></c-placeholder>
+    </template>
+  </lightning-card>
+</template>
