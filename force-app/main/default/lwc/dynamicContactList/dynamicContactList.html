@@ -1,15 +1,22 @@
 <template>
-    <lightning-input type="number" label="Limit" onchange={handleChange}></lightning-input>
-    <lightning-button label="Get Contacts" onclick={getContacts}></lightning-button>
+  <lightning-input
+    type="number"
+    label="Limit"
+    onchange={handleChange}
+  ></lightning-input>
+  <lightning-button
+    label="Get Contacts"
+    onclick={getContacts}
+  ></lightning-button>
 
-    <template if:true={contacts}>
-        <template for:each={contacts} for:item="contact">
-            <p key={contact.Id}>
-                {contact.Name}
-                {contact.LastName}
-                {contact.Email}              
-            </p>
-        </template>
-    </template>
-    
+  <template if:true={contacts}>
+    <lightning-accordion allow-multiple-sections-open>
+      <template for:each={contacts} for:item="contact">
+        <lightning-accordion-section key={contact.Id} label={contact.Name}>
+          Name: {contact.Name} Last Name: {contact.LastName} Email:
+          {contact.Email}
+        </lightning-accordion-section>
+      </template>
+    </lightning-accordion>
+  </template>
 </template>
