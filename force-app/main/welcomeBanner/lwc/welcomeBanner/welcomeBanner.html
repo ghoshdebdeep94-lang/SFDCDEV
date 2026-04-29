@@ -1,0 +1,13 @@
+<template>
+    <lightning-card title="Lets Get Started with LWC">
+        <div class="slds-text-align_left">
+            <template lwc:if={userName}>
+                <p>{gretingText} {userName}, {message}</p>
+                <p>{isActive}</p>
+            </template>
+            <template lwc:else>
+                <p>{loading}</p>
+            </template>
+        </div>
+    </lightning-card>
+</template>
