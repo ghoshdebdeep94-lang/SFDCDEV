@@ -7,29 +7,32 @@ import deleteRecord from '@salesforce/apex/AccountGridController.deleteRecord';
 export default class deleteAccount extends NavigationMixin(LightningElement) {
     @api recordId;
 
-    handleDelete() {
+    async handleDelete() {
         if (!this.recordId) {
             this.showToast('Error', 'No record ID provided.', 'error');
             return;
         }
 
-        deleteRecord({ recordId: this.recordId })
-            .then(() => {
-                this.showToast('Success', 'Record deleted successfully.', 'success');
-                this.closeAction();
-                // The record is gone, so send the user to the Account list view
-                this[NavigationMixin.Navigate]({
-                    type: 'standard__objectPage',
-                    attributes: {
-                        objectApiName: 'Account',
-                        actionName: 'list'
-                    }
-                });
-            })
-            .catch(error => {
-                this.showToast('Error', error.body?.message || 'An error occurred while deleting the record.', 'error');
-                this.closeAction();
-            });
+        try {
+            await deleteRecord({ recordId: this.recordId });
+        } catch (error) {
+            // Keep this catch around the Apex call only, so a failure in the
+            // navigation below is never reported as a failed delete
+            this.showToast('Error', this.getErrorMessage(error), 'error', 'sticky');
+            this.closeAction();
+            return;
+        }
+
+        this.showToast('Success', 'Record deleted successfully.', 'success');
+        this.closeAction();
+        // The record is gone, so send the user to the Account list view
+        this[NavigationMixin.Navigate]({
+            type: 'standard__objectPage',
+            attributes: {
+                objectApiName: 'Account',
+                actionName: 'list'
+            }
+        });
     }
 
     handleCancel() {
@@ -40,11 +43,21 @@ export default class deleteAccount extends NavigationMixin(LightningElement) {
         this.dispatchEvent(new CloseActionScreenEvent());
     }
 
-    showToast(title, message, variant) {
+    getErrorMessage(error) {
+        const body = error?.body;
+        // Page-level errors arrive as an array, Apex errors as a single object
+        if (Array.isArray(body)) {
+            return body.map(e => e.message).filter(Boolean).join(', ');
+        }
+        return body?.message || error?.message || 'An error occurred while deleting the record.';
+    }
+
+    showToast(title, message, variant, mode = 'dismissable') {
         const toast = new ShowToastEvent({
             title,
             message,
-            variant
+            variant,
+            mode
         });
         this.dispatchEvent(toast);
     }

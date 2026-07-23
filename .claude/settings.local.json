@@ -4,7 +4,9 @@
       "Bash(npm run:*)",
       "Bash(npm install:*)",
       "Bash(npx eslint:*)",
-      "Bash(sf project *)"
+      "Bash(sf project *)",
+      "Bash(sf data *)",
+      "Bash(sf apex *)"
     ]
   }
 }
