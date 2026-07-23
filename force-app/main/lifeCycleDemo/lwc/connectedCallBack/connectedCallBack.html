@@ -1,5 +1,8 @@
 <template>
-    <div class="slds-var-m-around_medium">
-        {message}
-    </div>
+    <h1> Parent Component</h1>
+    <lightning-button variant="base" label="Show/Hide" onclick={handleClick}
+        class="slds-m-left_x-small"></lightning-button>
+    <template if:true={showChild}>
+        <c-erro-child></c-erro-child>
+    </template>
 </template>

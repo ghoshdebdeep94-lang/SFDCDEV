@@ -1,13 +1,34 @@
 import { LightningElement, api } from 'lwc';
 
 export default class ConnectedCallBack extends LightningElement {
-    @api language = 'FR';
-    message;
+    showChild = true;
+
+    handleClick() {
+        if (this.showChild === true) {
+            this.showChild = false;
+        } else {
+            this.showChild = true;
+        }
+    }
+
+    constructor() {
+        super();
+        console.log('Constructor called');
+    }
 
     connectedCallback() {
-        this.message =
-            this.language === 'FR' ? 'Bonjour' :
-                this.language === 'ES' ? 'Hola' :
-                    'Hello';
+        console.log('Connected Callback called');
+    }
+
+    renderedCallback() {
+        console.log('Rendered Callback called');
+    }
+
+    disconnectedCallback() {
+        console.log('Disconnected Callback called');
+    }
+
+    errorCallback() {
+        console.log('Error Callback called');
     }
 }

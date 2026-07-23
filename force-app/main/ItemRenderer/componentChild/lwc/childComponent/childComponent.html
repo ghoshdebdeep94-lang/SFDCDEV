@@ -1,0 +1,9 @@
+<template>
+    <div class="slds-m-around_medium">
+        <lightning-card>
+            <template for:each={items} for:item="item">
+                <p key={item}>{item}</p>
+            </template>
+        </lightning-card>
+    </div>
+</template>
