@@ -7,7 +7,12 @@
       "Bash(sf project *)",
       "Bash(sf data *)",
       "Bash(sf apex *)",
-      "Bash(npx prettier *)"
+      "Bash(npx prettier *)",
+      "Bash(sf --version)",
+      "Bash(sfdx --version)",
+      "Bash(sf org *)",
+      "Bash(/usr/libexec/java_home -V)",
+      "Bash(java -version)"
     ]
   }
 }

@@ -1,5 +1,5 @@
 @isTest
-private class AnimalsCalloutTest {
+private class AnimalsCalloutsTest {
 
     @isTest
     static void testGetCallout() {
@@ -8,7 +8,7 @@ private class AnimalsCalloutTest {
 
         // 2. Wrap callouts between Test.startTest() and Test.stopTest()
         Test.startTest();
-        HttpResponse response = AnimalsCallout.makeGetCallout();
+        HttpResponse response = AnimalsCallouts.makeGetCallout();
         Test.stopTest();
 
         // 3. Verify assertions
@@ -24,11 +24,11 @@ private class AnimalsCalloutTest {
 
         // 2. Execute callout
         Test.startTest();
-        HttpResponse response = AnimalsCallout.makePostCallout();
+        HttpResponse response = AnimalsCallouts.makePostCallout();
         Test.stopTest();
 
         // 3. Verify assertions
-        Assert.areEqual(200, response.getStatusCode(), 'Expected 200 status code');
+        Assert.areEqual(201, response.getStatusCode(), 'Expected 200 status code');
         Assert.areEqual('application/json', response.getHeader('Content-Type'));
         Assert.areEqual('{"animals": ["majestic badger", "fluffy bunny", "scary bear", "chicken", "mighty moose"]}', response.getBody());
     }

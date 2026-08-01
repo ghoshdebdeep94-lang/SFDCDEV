@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apex HTTP Callout Test Flow</title>
+<style>
+  :root {
+    --bg: #f6f8fa;
+    --card: #ffffff;
+    --ink: #1f2328;
+    --muted: #656d76;
+    --border: #d0d7de;
+    --test: #8250df;
+    --test-bg: #f5f0ff;
+    --real: #0969da;
+    --real-bg: #eef6ff;
+    --mock: #bc4c00;
+    --mock-bg: #fff4ec;
+    --sf: #1a7f37;
+    --sf-bg: #eef8f0;
+    --arrow: #6e7781;
+    --code-bg: #f0f2f4;
+    --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1117; --card: #161b22; --ink: #e6edf3; --muted: #8b949e;
+      --border: #30363d; --test: #d2a8ff; --test-bg: #211a33;
+      --real: #79c0ff; --real-bg: #12233a; --mock: #ffa657; --mock-bg: #33220f;
+      --sf: #7ee787; --sf-bg: #10241a; --arrow: #8b949e; --code-bg: #1c2128;
+      --shadow: 0 1px 3px rgba(0,0,0,.4);
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 2rem 1rem 4rem;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: var(--bg); color: var(--ink); line-height: 1.5;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; }
+  h1 { font-size: 1.6rem; margin: 0 0 .3rem; }
+  .sub { color: var(--muted); margin: 0 0 2rem; font-size: .95rem; }
+  .legend { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 2rem; }
+  .chip {
+    display: inline-flex; align-items: center; gap: .4rem;
+    font-size: .8rem; padding: .3rem .7rem; border-radius: 999px;
+    border: 1px solid var(--border); background: var(--card);
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .flow { display: flex; flex-direction: column; align-items: stretch; gap: 0; }
+  .step {
+    border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.2rem;
+    background: var(--card); box-shadow: var(--shadow); position: relative;
+    border-left: 5px solid var(--border);
+  }
+  .step.test  { border-left-color: var(--test); background: var(--test-bg); }
+  .step.real  { border-left-color: var(--real); background: var(--real-bg); }
+  .step.mock  { border-left-color: var(--mock); background: var(--mock-bg); }
+  .step.sf    { border-left-color: var(--sf);   background: var(--sf-bg); }
+  .step .num {
+    position: absolute; top: -12px; left: -12px; width: 26px; height: 26px;
+    border-radius: 50%; display: grid; place-items: center; font-size: .8rem;
+    font-weight: 700; color: #fff; background: var(--arrow);
+  }
+  .step.test .num { background: var(--test); }
+  .step.real .num { background: var(--real); }
+  .step.mock .num { background: var(--mock); }
+  .step.sf .num   { background: var(--sf); }
+  .step h3 { margin: 0 0 .15rem; font-size: 1rem; }
+  .step .file { font-size: .75rem; color: var(--muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .step p { margin: .6rem 0 0; font-size: .9rem; }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    background: var(--code-bg); padding: .12rem .4rem; border-radius: 5px; font-size: .82em;
+  }
+  pre {
+    background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px;
+    padding: .7rem .9rem; overflow-x: auto; margin: .7rem 0 0; font-size: .8rem;
+  }
+  pre code { background: none; padding: 0; }
+  .arrow {
+    align-self: center; display: flex; flex-direction: column; align-items: center;
+    color: var(--arrow); padding: .35rem 0;
+  }
+  .arrow .label {
+    font-size: .72rem; background: var(--card); border: 1px solid var(--border);
+    padding: .1rem .55rem; border-radius: 999px; margin-bottom: .1rem; white-space: nowrap;
+  }
+  .arrow.intercept .label { color: var(--mock); border-color: var(--mock); font-weight: 600; }
+  .arrow svg { display: block; }
+  .note {
+    margin-top: 2.5rem; padding: 1rem 1.2rem; border-radius: 10px;
+    background: var(--code-bg); border: 1px solid var(--border); font-size: .88rem;
+  }
+  .note strong { color: var(--mock); }
+  .highlight { color: var(--mock); font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>How the Apex Callout Test Works</h1>
+  <p class="sub">The path from the test method → real callout class → mock → assertions. The real HTTP endpoint is <em>never</em> hit during the test.</p>
+
+  <div class="legend">
+    <span class="chip"><span class="dot" style="background:var(--test)"></span>Test class</span>
+    <span class="chip"><span class="dot" style="background:var(--real)"></span>Production callout class</span>
+    <span class="chip"><span class="dot" style="background:var(--sf)"></span>Salesforce runtime</span>
+    <span class="chip"><span class="dot" style="background:var(--mock)"></span>Mock class</span>
+  </div>
+
+  <div class="flow">
+
+    <div class="step test">
+      <span class="num">1</span>
+      <h3>Register the mock</h3>
+      <span class="file">AnimalsCalloutsTest.testGetCallout()</span>
+      <p>The test tells Salesforce: <em>"for the rest of this test, don't make real callouts — use this mock instead."</em></p>
+      <pre><code>Test.setMock(HttpCalloutMock.class, new AnimalsHttpCalloutMock());</code></pre>
+    </div>
+
+    <div class="arrow">
+      <span class="label">calls the production method inside startTest / stopTest</span>
+      <svg width="20" height="26"><path d="M10 0 V20 M4 14 L10 22 L16 14" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+    </div>
+
+    <div class="step real">
+      <span class="num">2</span>
+      <h3>Build the request &amp; send</h3>
+      <span class="file">AnimalsCallouts.makeGetCallout()</span>
+      <p>The real production code builds an <code>HttpRequest</code>, sets the method, and calls <code>http.send()</code> — exactly as it would in production.</p>
+      <pre><code>HttpRequest request = new HttpRequest();
+request.setEndpoint('https://.../animals');
+request.setMethod('GET');          // ← method set HERE
+HttpResponse response = http.send(request);</code></pre>
+    </div>
+
+    <div class="arrow intercept">
+      <span class="label">⛔ send() is intercepted — no network call</span>
+      <svg width="20" height="26"><path d="M10 0 V20 M4 14 L10 22 L16 14" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+    </div>
+
+    <div class="step sf">
+      <span class="num">3</span>
+      <h3>Salesforce intercepts the send</h3>
+      <span class="file">Salesforce test runtime</span>
+      <p>Because a mock was registered in step 1, the runtime blocks the real HTTP call and instead routes the request into the mock's <code>respond()</code> method. (Live callouts are not even allowed inside tests.)</p>
+    </div>
+
+    <div class="arrow">
+      <span class="label">respond(request)</span>
+      <svg width="20" height="26"><path d="M10 0 V20 M4 14 L10 22 L16 14" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+    </div>
+
+    <div class="step mock">
+      <span class="num">4</span>
+      <h3>Mock builds a fake response</h3>
+      <span class="file">AnimalsHttpCalloutMock.respond()</span>
+      <p>The mock reads <code>request.getMethod()</code> — which returns <span class="highlight">'GET'</span> because that's what step 2 set — and returns a hardcoded, predictable response.</p>
+      <pre><code>switch on request.getMethod() {   // returns 'GET'
+  when 'GET' {
+    response.setStatusCode(200);
+    response.setBody('{"animals":[...]}');
+  }
+  when 'POST' { ... }
+}
+return response;</code></pre>
+    </div>
+
+    <div class="arrow">
+      <span class="label">fake HttpResponse returned back up the chain</span>
+      <svg width="20" height="26"><path d="M10 0 V20 M4 14 L10 22 L16 14" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+    </div>
+
+    <div class="step test">
+      <span class="num">5</span>
+      <h3>Assert against the fake response</h3>
+      <span class="file">AnimalsCalloutsTest.testGetCallout()</span>
+      <p>The response received by <code>makeGetCallout()</code> is the mock's fake one, so the test can assert exact, stable values.</p>
+      <pre><code>Assert.areEqual(200, response.getStatusCode());
+Assert.areEqual('application/json', response.getHeader('Content-Type'));
+Assert.areEqual('{"animals":[...]}', response.getBody());</code></pre>
+    </div>
+
+  </div>
+
+  <div class="note">
+    <strong>Key idea:</strong> the HTTP <em>method</em> (<code>GET</code>/<code>POST</code>) is set on the <em>request</em> in step 2 and read back by the mock in step 4 — that's how one mock class serves both <code>makeGetCallout</code> and <code>makePostCallout</code>. The real endpoint is only reached when this code runs in production; during the test the mock stands in for it, giving fast, offline, deterministic results.
+  </div>
+</div>
+</body>
+</html>
