@@ -4,10 +4,7 @@ private class AccountManagerTest {
   static void testGetAccountById() {
     Id accountId = createTestRecord();
     RestRequest request = new RestRequest();
-    request.requestURI =
-      'https://MyDomain.my.salesforce.com/services/apexrest/Account/' +
-      accountId +
-      '/contacts';
+    request.requestURI = '/Account/' + accountId + '/contacts';
     request.httpMethod = 'GET';
     RestContext.request = request;
 
