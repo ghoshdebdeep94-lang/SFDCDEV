@@ -4,14 +4,19 @@ private class AccountManagerTest {
   static void testGetAccountById() {
     Id accountId = createTestRecord();
     RestRequest request = new RestRequest();
-    request.requestURI = '/Account/' + accountId + '/contacts';
+    request.requestURI =
+      '/services/apexrest/Accounts/' +
+      accountId +
+      '/contacts';
     request.httpMethod = 'GET';
     RestContext.request = request;
 
     Account acc = AccountManager.getAccount();
 
-    Assert.isTrue(acc != null);
+    Assert.isNotNull(acc);
     Assert.areEqual('Jamingo', acc.Name);
+    Assert.areEqual(1, acc.Contacts.size());
+    Assert.areEqual('John Doe', acc.Contacts[0].Name);
   }
 
   static Id createTestRecord() {

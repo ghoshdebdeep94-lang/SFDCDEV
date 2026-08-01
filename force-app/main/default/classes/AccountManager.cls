@@ -1,15 +1,17 @@
-/*Use method via - /services/apexrest/Account/<pass record Id here>
+/*Use method via - /services/apexrest/Accounts/<pass record Id here>/contacts
  The method can be accessed via workbench*/
 
-@RestResource(urlMapping='/Account/*/contacts')
+@RestResource(urlMapping='/Accounts/*/contacts')
 global with sharing class AccountManager {
   @HttpGet
   global static Account getAccount() {
     RestRequest req = RestContext.request;
     String requestURI = req.requestURI;
 
-    //Pattern: .../Account/<Account_ID>/contacts
-    String accountId = requestURI.substringBetween('/Account/', '/contacts');
+    //Pattern: .../Accounts/<Account_ID>/contacts
+    //Take the segment right before '/contacts', so any URI prefix works
+    String accountId = requestURI.substringBeforeLast('/contacts')
+      .substringAfterLast('/');
 
     Account acc = [
       SELECT Id, Name, (SELECT Id, Name FROM Contacts)
