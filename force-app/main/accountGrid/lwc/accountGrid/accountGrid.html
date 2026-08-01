@@ -1,3 +1,15 @@
 <template>
-    
+  <lightning-card title="Records">
+    <lightning-datatable
+      key-field={keyField}
+      data={data}
+      columns={columns}
+      selected-rows={selectedRows}
+      max-row-selection={maxRowSelection}
+      onrowselection={handleRowSelection}
+      show-row-number-column={showRowNumbers}
+      hide-checkbox-column={hideCheckboxColumn}
+    >
+    </lightning-datatable>
+  </lightning-card>
 </template>

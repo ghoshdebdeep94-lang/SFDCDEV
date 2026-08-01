@@ -1,66 +1,67 @@
 <template>
-    <!-- Show Button (visible only when contacts are hidden) -->
-    <template if:false={showContacts}>
-        <div class="slds-m-bottom_medium">
-            <lightning-button
-                label="Show Active Contacts"
-                variant="brand"
-                onclick={handleShowContacts}>
-            </lightning-button>
+  <!-- Show Button (visible only when contacts are hidden) -->
+  <template if:false={showContacts}>
+    <div class="slds-m-bottom_medium">
+      <lightning-button
+        label="Show Active Contacts"
+        variant="brand"
+        onclick={handleShowContacts}
+      >
+      </lightning-button>
+    </div>
+  </template>
+
+  <!-- Hide Button (visible only when contacts are shown) -->
+  <template if:true={showContacts}>
+    <div class="slds-m-bottom_medium">
+      <lightning-button
+        label="Hide Active Contacts"
+        variant="neutral"
+        onclick={handleHideContacts}
+      >
+      </lightning-button>
+    </div>
+  </template>
+
+  <!-- Contacts Section -->
+  <template if:true={showContacts}>
+    <template if:true={contacts.length}>
+      <lightning-card title="Active Contacts">
+        <ul class="slds-m-around_medium">
+          <template for:each={contacts} for:item="contact">
+            <li key={contact.Id} class="slds-m-bottom_small">
+              <strong>{contact.Name}</strong><br />
+              <span class="slds-text-body_small"> {contact.Email} </span>
+            </li>
+          </template>
+        </ul>
+      </lightning-card>
+    </template>
+
+    <!-- Empty State -->
+    <template if:false={contacts.length}>
+      <div class="slds-m-around_medium slds-text-color_weak">
+        No active contacts found for this account.
+      </div>
+    </template>
+
+    <!--Error State-->
+
+    <template if:true={error}>
+      <div class="slds-m-around_medium slds-box slds-theme_error">
+        <p class="slds-text-color_inverse">
+          Something went wrong while loading contacts.
+        </p>
+
+        <div class="slds-m-top_small">
+          <lightning-button
+            label="Clear Error"
+            variant="neutral"
+            onclick={handleClearError}
+          >
+          </lightning-button>
         </div>
+      </div>
     </template>
-
-    <!-- Hide Button (visible only when contacts are shown) -->
-    <template if:true={showContacts}>
-        <div class="slds-m-bottom_medium">
-            <lightning-button
-                label="Hide Active Contacts"
-                variant="neutral"
-                onclick={handleHideContacts}>
-            </lightning-button>
-        </div>
-    </template>
-
-    <!-- Contacts Section -->
-    <template if:true={showContacts}>
-        <template if:true={contacts.length}>
-            <lightning-card title="Active Contacts">
-                <ul class="slds-m-around_medium">
-                    <template for:each={contacts} for:item="contact">
-                        <li key={contact.Id} class="slds-m-bottom_small">
-                            <strong>{contact.Name}</strong><br />
-                            <span class="slds-text-body_small">
-                                {contact.Email}
-                            </span>
-                        </li>
-                    </template>
-                </ul>
-            </lightning-card>
-        </template>
-
-        <!-- Empty State -->
-        <template if:false={contacts.length}>
-            <div class="slds-m-around_medium slds-text-color_weak">
-                No active contacts found for this account.
-            </div>
-        </template>
-
-        <!--Error State-->
-
-        <template if:true={error}>
-            <div class="slds-m-around_medium slds-box slds-theme_error">
-                <p class="slds-text-color_inverse">
-                    Something went wrong while loading contacts.
-                </p>
-
-                <div class="slds-m-top_small">
-                    <lightning-button
-                        label="Clear Error"
-                        variant="neutral"
-                        onclick={handleClearError}>
-                    </lightning-button>
-                </div>
-            </div>
-        </template>
-    </template>
+  </template>
 </template>

@@ -1,15 +1,17 @@
 <template>
-    <lightning-input type="number" label="Limit" onchange={handleChange}></lightning-input>
-    <lightning-button label="Get Contacts" onclick={getContacts}></lightning-button>
+  <lightning-input
+    type="number"
+    label="Limit"
+    onchange={handleChange}
+  ></lightning-input>
+  <lightning-button
+    label="Get Contacts"
+    onclick={getContacts}
+  ></lightning-button>
 
-    <template if:true={contacts}>
-        <template for:each={contacts} for:item="contact">
-            <p key={contact.Id}>
-                {contact.Name}
-                {contact.LastName}
-                {contact.Email}              
-            </p>
-        </template>
+  <template if:true={contacts}>
+    <template for:each={contacts} for:item="contact">
+      <p key={contact.Id}>{contact.Name} {contact.LastName} {contact.Email}</p>
     </template>
-    
+  </template>
 </template>

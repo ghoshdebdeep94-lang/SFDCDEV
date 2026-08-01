@@ -1,5 +1,5 @@
 export const STATUS_VARIANTS = {
-    SUCCESS: 'success',
-    ERROR: 'destructive',
-    WARNING: 'neutral'
+  SUCCESS: "success",
+  ERROR: "destructive",
+  WARNING: "neutral"
 };

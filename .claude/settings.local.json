@@ -6,7 +6,8 @@
       "Bash(npx eslint:*)",
       "Bash(sf project *)",
       "Bash(sf data *)",
-      "Bash(sf apex *)"
+      "Bash(sf apex *)",
+      "Bash(npx prettier *)"
     ]
   }
 }

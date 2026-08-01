@@ -1,14 +1,14 @@
 <template>
-    <lightning-card title="Dynamic Status Buttons">
-        <div class="slds-p-around_medium">
-            <template for:each={statusList} for:item="status">
-
-                <div key={status} class="slds-m-bottom_x-small">
-
-                    <c-status-badge status={status} onstatusclick={handleParentClick}></c-status-badge>
-
-                </div>
-            </template>
+  <lightning-card title="Dynamic Status Buttons">
+    <div class="slds-p-around_medium">
+      <template for:each={statusList} for:item="status">
+        <div key={status} class="slds-m-bottom_x-small">
+          <c-status-badge
+            status={status}
+            onstatusclick={handleParentClick}
+          ></c-status-badge>
         </div>
-    </lightning-card>
+      </template>
+    </div>
+  </lightning-card>
 </template>

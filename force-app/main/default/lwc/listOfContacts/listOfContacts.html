@@ -1,16 +1,12 @@
 <template>
-    <ul class="slds-list_dotted">
-        <template for:each={contacts.data} for:item="contact">
-            <li key={contact.Id}>
-                <div>
-                        <p>Contact for : {contact.LastName}</p>
-                        <p>
-                            {contact.Name}
-                            {contact.Email}
-                        </p>
-                </div>
-                
-            </li>
-        </template>
-    </ul>
+  <ul class="slds-list_dotted">
+    <template for:each={contacts.data} for:item="contact">
+      <li key={contact.Id}>
+        <div>
+          <p>Contact for : {contact.LastName}</p>
+          <p>{contact.Name} {contact.Email}</p>
+        </div>
+      </li>
+    </template>
+  </ul>
 </template>

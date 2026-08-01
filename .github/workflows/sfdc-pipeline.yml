@@ -43,7 +43,7 @@ jobs:
 
   # PHASE 3: MANUAL CD - DEPLOY TO PROD (Play Button 2)
   deploy-prod:
-    needs: [deploy-qa] 
+    needs: [deploy-qa]
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     environment: Prod # GitHub looks for Secrets in this Environment first
