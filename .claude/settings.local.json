@@ -12,7 +12,8 @@
       "Bash(sfdx --version)",
       "Bash(sf org *)",
       "Bash(/usr/libexec/java_home -V)",
-      "Bash(java -version)"
+      "Bash(java -version)",
+      "Bash(sf config *)"
     ]
   }
 }
